@@ -42,7 +42,6 @@ let champions = ref<Champion[]>([]);
 const displayedChamps = computed(() => {
   let res: Champion[] = [];
   res.push(...champions.value)
-  console.log(res);
   if (hideGranted.value) {
     res = res.filter((champion) => !champion.chestGranted)
   }
@@ -58,7 +57,16 @@ const referrer = "https://lolchestfinder.redninja.org"
 let hideNotGranted = ref(false);
 let hideGranted = ref(false);
 
+onMounted(() => {
+  const sn = localStorage.getItem("summonerName")
+  console.log(sn);
+  if (sn) {
+    summonerName.value = sn;
+  }
+})
+
 const search = async () => {
+  localStorage.setItem("summonerName", summonerName.value);
   const summonerId = await getSummonerId();
   const masteries = await getMasteries(summonerId);
   hasResults.value = "true";
@@ -79,10 +87,10 @@ const getMasteries = async (summonerId: string) => {
     referrer
   })
   const jsonResponse = await resp.json();
-  jsonResponse.filter((champion) => champion.championName !== undefined)
+  jsonResponse.filter((champion: Champion) => champion.championName !== undefined)
   // champions.value = jsonResponse;
   
-  jsonResponse.forEach((champion) => {
+  jsonResponse.forEach((champion: Champion) => {
     champion.championName = staticChamps[champion.championId].name
     champion.championImage = staticChamps[champion.championId].image
   })
