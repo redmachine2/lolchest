@@ -1,5 +1,5 @@
 <template>
-  <v-container class="container">
+  <v-container>
     <div class="searchGroup">
       <v-text-field label="Summoner Name" v-model="summonerName"></v-text-field>
       <v-btn-group>
@@ -58,15 +58,6 @@ const referrer = "https://lolchestfinder.redninja.org"
 let hideNotGranted = ref(false);
 let hideGranted = ref(false);
 
-
-// const toggleNotGranted = () => {
-//     displayedChamps.value = champions.value.filter((champion) => !champion.chestGranted)
-// }
-
-// const toggleGranted = () => {
-//   displayedChamps.value = champions.value.filter((champion) => champion.chestGranted)
-// }
-
 const search = async () => {
   const summonerId = await getSummonerId();
   const masteries = await getMasteries(summonerId);
@@ -101,9 +92,6 @@ const getMasteries = async (summonerId: string) => {
 </script>
 
 <style>
-.container {
-  /* background-color: rgb(0, 0, 0); */
-}
 
 .searchGroup {
   padding-top: 20px;
