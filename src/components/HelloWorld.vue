@@ -2,10 +2,10 @@
   <v-container>
     <div class="searchGroup">
       <v-text-field label="Summoner Name" v-model="summonerName"></v-text-field>
-      <v-btn-group>
+      <v-btn-group divided rounded>
         <v-btn @click="search">Search</v-btn>
-        <v-btn @click="hideGranted = !hideGranted">Hide Granted</v-btn>
-        <v-btn @click="hideNotGranted = !hideNotGranted">Hide Not Granted</v-btn>
+        <v-btn @click="hideGranted = !hideGranted">Toggle Granted</v-btn>
+        <v-btn @click="hideNotGranted = !hideNotGranted">Toggle Not Granted</v-btn>
     </v-btn-group>
     </div>
     <v-row v-if="hasResults">
