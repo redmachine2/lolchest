@@ -16,8 +16,26 @@
       v-for="champion in displayedChamps"
       :key="champion.championId"
       cols="auto">
-      <img class="champion-holder" :class="{'chest': champion.chestGranted}" :src="`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champion.championImage}`"/>
+      <v-menu
+        v-model="champion.menu"
+        :close-on-content-click="false"
+        location="end">
+        <template v-slot:activator="{props}">
+          <img :title="champion.championName" v-bind="props" class="champion-holder" :class="{'chest': champion.chestGranted}"  :src="`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champion.championImage}`"/>
+        </template>
+
+        <v-card min-width="300">
+          <div>{{champion.championName}}</div>
+          <div>Champion Level: {{champion.championLevel}}</div>
+          <div>Champion Points: {{champion.championPoints}}</div>
+          <a target="_blank" :href="`https://u.gg/lol/champions/aram/${champion.championName?.toLowerCase().replace('/\s/g', '')}-aram`">Aram Build</a>
+          <v-card-actions>
+            <v-btn text @click="champion.menu = false">Close</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-menu>
       </v-col>
+      
     </v-row>
   </v-container>
 </template>
@@ -38,6 +56,7 @@ interface Champion {
   tokensEarned: number
   championName?: string;
   championImage?: string;
+  menu: boolean;
 }
 
 const version = ref("12.17.1");
@@ -102,6 +121,7 @@ const getMasteries = async (summonerId: string) => {
   jsonResponse.forEach((champion: Champion) => {
     champion.championName = staticChamps[champion.championId].name
     champion.championImage = staticChamps[champion.championId].image
+    champion.menu = false;
   })
   
   return jsonResponse;
