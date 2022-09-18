@@ -8,14 +8,15 @@
           <v-btn @click="hideGranted = !hideGranted">Toggle Granted</v-btn>
           <v-btn @click="hideNotGranted = !hideNotGranted">Toggle Not Granted</v-btn>
         </v-btn-group>
+        <v-text-field v-if="hasResults" label="Champ Search" v-model="champSearch"></v-text-field>
       </div>
     </v-row>
-    <v-row v-if="hasResults">
+    <v-row v-if="hasResults || hide">
       <v-col
       v-for="champion in displayedChamps"
       :key="champion.championId"
       cols="auto">
-      <v-img class="champion-holder" :class="{'chest': champion.chestGranted}" :src="`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champion.championImage}`"></v-img>
+      <img class="champion-holder" :class="{'chest': champion.chestGranted}" :src="`https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champion.championImage}`"/>
       </v-col>
     </v-row>
   </v-container>
@@ -40,14 +41,20 @@ interface Champion {
 }
 
 const version = ref("12.17.1");
+const champSearch = ref("");
+const hide = ref(false);
 let champions = ref<Champion[]>([]);
 const displayedChamps = computed(() => {
   let res: Champion[] = [];
   res.push(...champions.value)
-  if (hideGranted.value) {
+  res = champions.value
+  if(champSearch && champSearch.value) {
+    res = res.filter((champion) => champion.championName?.toLowerCase().includes(champSearch.value.toLowerCase()))
+  }
+  if (hideGranted && hideGranted.value) {
     res = res.filter((champion) => !champion.chestGranted)
   }
-  if (hideNotGranted.value) {
+  if (hideNotGranted && hideNotGranted.value) {
     res = res.filter((champion)=> champion.chestGranted)
   }
   return res;
